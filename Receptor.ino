@@ -7,9 +7,11 @@
 #define pinAtrasDerecha      5
 #define pinAdelanteIzquierda 6
 #define pinAtrasIzquierda    9
-//#define pinMuestra          10
+//#define pinMuestra         4
 #define led_pin             13
 #define receive_pin         12
+#define pinHelice           10 //Sin opcion a reversa
+#define pinServo            11
 
 boolean muestraTomada = false;
 
@@ -20,6 +22,8 @@ void setup()
   pinMode(pinAtrasDerecha,      OUTPUT);
   pinMode(pinAdelanteIzquierda, OUTPUT);
   pinMode(pinAtrasIzquierda,    OUTPUT);
+  pinMode(pinHelice,            OUTPUT);
+  pinMode(pinServo,             OUTPUT);
   //pinMode(pinMuestra,           OUTPUT);
   //digitalWrite(pinMuestra, LOW);
   
@@ -46,9 +50,16 @@ void loop()
     
   #ifdef DEBUG 
     Serial.print(char(buf[0]));
+    Serial.print("\t");
     Serial.print(char(buf[1]));
+    Serial.print("\t");
     Serial.print(char(buf[2]));
-    Serial.println(char(buf[3]));
+    Serial.print("\t");
+    Serial.print(char(buf[3]));
+    Serial.print("\t");
+    Serial.print(char(buf[4]));
+    Serial.print("\t");
+    Serial.println(char(buf[5]));
   #endif
     if(buf[0] == '0' && buf[1]== '0') apaga();
     else if(buf[0] == '0' && buf[1]== 'F') derechaAdelante();
@@ -59,7 +70,10 @@ void loop()
     else if(buf[0] == 'B' && buf[1]== '0') izquierdaAtras();
     else if(buf[0] == 'B' && buf[1]== 'F') giraIzquierda();
     else if(buf[0] == 'B' && buf[1]== 'B') retrocede();
-   /* if (muestraTomada == false)
+    analogWrite(pinServo, buf[2]);
+    if(buf[3] == '0' || buf[3] == 'B') digitalWrite(pinHelice, LOW);
+    else if(buf[3] == 'F') digitalWrite(pinHelice, HIGH);
+    /* if (muestraTomada == false)
       {
         if(buf[2] == '1')
         {
@@ -143,5 +157,4 @@ void retrocede()
   digitalWrite(pinAdelanteIzquierda, LOW);
   digitalWrite(pinAtrasIzquierda,    HIGH);
 }
-
 
