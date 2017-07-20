@@ -11,10 +11,10 @@
 //Pensar cambiar int por byte para ahorrar espacio
 const int potIzq       = A4;  //Control motor izquierdo
 const int potDer       = A5;  //Control motor derecho
-const int potTimon     = A1;  //Control del servo motor helice  
-const int motorHelice  = A2;  //Cambio de estado motor helice
+const int motorHelice  = A1;  //Cambio de estado motor helice
+const int potTimon     = A2;  //Control del servo motor helice  
 const int tomaMuestras =  4;  //Control motor jeringuilla de muestras
-const int capturaRed   =  5;    //Control motor de recogida por arrastre
+const int capturaRed   =  5;  //Control motor de recogida por arrastre
 const int humbral  = 1024/3;  //Para fijar los valores de cambio de comportamiento
 const int medio    = 1024/2;
 const int transmit_pin = 12; //Pin de la antena emisora
@@ -38,7 +38,7 @@ void loop()
   //Muestreo del estado de la base de radio control
   int marchaIzq = media(potIzq,500);
   int marchaDer = media(potDer,500);
-  int posicionTimon = analogRead(potTimon)/4;
+  int posicionTimon = analogRead(potTimon);
   int helice = analogRead(motorHelice);
   int muestras = digitalRead(tomaMuestras);
   int red = digitalRead(capturaRed);
