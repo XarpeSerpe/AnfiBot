@@ -1,7 +1,7 @@
 #define DEBUG //Comentar esta linea tras hacer el test
 //Incluye biblioteca de comunicación por ondas electromagnéticas
 #include <VirtualWire.h> 
-
+#include <ServoTimer2.h> //Control de servos con el timer2
 //Definición de pines
 #define pinAdelanteDerecha   3
 #define pinAtrasDerecha      5
@@ -14,7 +14,7 @@
 #define pinServo            11
 
 boolean muestraTomada = false;
-
+ServoTimer2 timon;
 //Configuración de estado de los pines
 void setup()
 {
@@ -23,7 +23,8 @@ void setup()
   pinMode(pinAdelanteIzquierda, OUTPUT);
   pinMode(pinAtrasIzquierda,    OUTPUT);
   pinMode(pinHelice,            OUTPUT);
-  pinMode(pinServo,             OUTPUT);
+  timon.attach(pinServo); //prueba con servo siempre conectado
+  timon.write(map(1024/2, 0, 1023, MAX_PULSE_WIDTH, MIN_PULSE_WIDTH));//Centrar el servo
   //pinMode(pinMuestra,           OUTPUT);
   //digitalWrite(pinMuestra, LOW);
   
@@ -53,7 +54,7 @@ void loop()
     Serial.print("\t");
     Serial.print(char(buf[1]));
     Serial.print("\t");
-    Serial.print(char(buf[2]));
+    Serial.print(int(buf[2]));
     Serial.print("\t");
     Serial.print(char(buf[3]));
     Serial.print("\t");
@@ -70,7 +71,8 @@ void loop()
     else if(buf[0] == 'B' && buf[1]== '0') izquierdaAtras();
     else if(buf[0] == 'B' && buf[1]== 'F') giraIzquierda();
     else if(buf[0] == 'B' && buf[1]== 'B') retrocede();
-    analogWrite(pinServo, buf[2]);
+    timon.write(map(int(buf[2]), 1023, 0, MAX_PULSE_WIDTH, MIN_PULSE_WIDTH));
+    delay(100);
     if(buf[3] == '0' || buf[3] == 'B') digitalWrite(pinHelice, LOW);
     else if(buf[3] == 'F') digitalWrite(pinHelice, HIGH);
     /* if (muestraTomada == false)
